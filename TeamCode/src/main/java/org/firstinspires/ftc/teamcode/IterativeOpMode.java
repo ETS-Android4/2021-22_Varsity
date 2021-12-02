@@ -39,10 +39,10 @@ public class IterativeOpMode extends OpMode{
         double rotate;
         if(gamepad1.dpad_left)
         {
-            rotate=-1;
+            rotate=-0.5;
         }
         else if (gamepad1.dpad_right){
-            rotate=1;
+            rotate=0.5;
         }
         else{
             rotate=0;
@@ -50,11 +50,11 @@ public class IterativeOpMode extends OpMode{
         //CW is pos (joystick right?), CCW is neg (joystick left?)
         telemetry.addData("Rotate", rotate );
 
-        if (rotate!=0) {
-            robot.blDrive.setPower(blStrafePwr * rotate);
-            robot.brDrive.setPower(brStrafePwr * -rotate);
-            robot.flDrive.setPower(flStrafePwr * rotate);
-            robot.frDrive.setPower(frStrafePwr * -rotate);
+        if (strafe_Y==0 && strafe_X==0) {
+            robot.blDrive.setPower(rotate);
+            robot.brDrive.setPower(-rotate);
+            robot.flDrive.setPower(rotate);
+            robot.frDrive.setPower(-rotate);
         }
         else{
             robot.blDrive.setPower(blStrafePwr);
