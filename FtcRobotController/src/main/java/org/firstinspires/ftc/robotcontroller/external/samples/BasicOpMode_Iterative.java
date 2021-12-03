@@ -32,33 +32,31 @@ package org.firstinspires.ftc.robotcontroller.external.samples;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-/**
- * This file contains an example of an iterative (Non-Linear) "OpMode".
- * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
- * The names of OpModes appear on the menu of the FTC Driver Station.
- * When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all iterative OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-import com.qualcomm.robotcore.hardware.DcMotor;
+
 @TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
 @Disabled
-public class BasicOpMode_Iterative extends OpMode
-{
+public class BasicOpMode_Iterative extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private DcMotor armDrive = null;
+    private DcMotor armShoot = null;
+    CRServo boxMove;
+    // public static double boxPosition = 0.5;
+    public final static double minPosition = 0.0;
+    public final static double maxPosition = 1;
+    double contPower;
+
+
+
 
 
     /*
@@ -68,31 +66,39 @@ public class BasicOpMode_Iterative extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        armDrive = hardwareMap.dcMotor.get("arm"); //definition for armDrive motor
+        //init all motors
+        armDrive = hardwareMap.dcMotor.get("arm");
         armDrive = hardwareMap.get(DcMotor.class, "armDrive");
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
+        armShoot = hardwareMap.get(DcMotor.class, "armShoot");
         //leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         //rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
 
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        //leftDrive.setDirection(DcMotor.Direction.FORWARD);
-       //rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        //init servos
+        boxMove = hardwareMap.crservo.get("boxMove");
+        boxMove.setPower(contPower);
+
+
+
+       //set directions of motors
+        leftDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        armDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        armShoot.setPower(50);
+
+        //servo configs
+
+
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
 
-    /*
-     * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-     */
+        //runs repeatedly after init, but before play
     @Override
     public void init_loop() {
-
     }
 
+    
     /*
      * Code to run ONCE when the driver hits PLAY
      */
@@ -109,35 +115,83 @@ public class BasicOpMode_Iterative extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftPower;
         double rightPower;
+        int position = armDrive.getCurrentPosition();
 
         // Choose to drive using either Tank Mode, or POV Mode
         // Comment out the method that's not used.  The default below is POV.
 
         // POV Mode uses left stick to go forward, and right stick to turn.
         // - This uses basic math to combine motions and is easier to drive straight.
-        double drive = -gamepad1.left_stick_y;
-        double turn  =  gamepad1.right_stick_x;
-        leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-        rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+        double drive = -gamepad2.left_stick_y;
+        double turn = gamepad2.right_stick_x;
+        leftPower = Range.clip(drive + turn, -1.0, 1.0);
+        rightPower = Range.clip(drive - turn, -1.0, 1.0);
+
+        //shoot cascade out ig
+        boolean shootButton = gamepad2.x;
+        boolean retractButton = gamepad2.b;
+
+            if (shootButton)
+            {
+
+            }
+            else if (retractButton)
+            {
+
+            }
+
 
         //Code for moving cascade w/ motors
-        double cascade = -gamepad1.left_stick_y;
-        armDrive.setPower(cascade);
-        armDrive.setPower(leftPower);
-        
+        boolean motorButton = gamepad2.a;
+        double cascade = gamepad2.left_stick_x;
 
+
+        if (motorButton)
+        {
+            armDrive.setPower(cascade);
+        }
+        else
+            {
+            armDrive.setPower(0);
+             }
+
+
+        //Moving servo for cascade arm
+        boolean servoUp = gamepad2.dpad_up;
+        boolean servoDown = gamepad2.dpad_down;
+
+        if (servoUp)
+        {
+            contPower = .30;
+        }
+        else if (servoDown)
+        {
+            contPower = -.30;
+        }
+        else
+            {
+            contPower = 0.0;
+            }
+
+
+        boxMove.setPower(contPower);
 
         // Tank Mode uses one stick to control each wheel.
         // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y
+
+        //drive is handled in Irenka's strafe code; commented out because yeah
+       // leftPower  = -gamepad1.left_stick_y ;
+       // rightPower = -gamepad1.right_stick_y;
         // Send calculated power to wheels
-        leftDrive.setPower(leftPower);
-        rightDrive.setPower(rightPower);
+       // leftDrive.setPower(leftPower);
+       // rightDrive.setPower(rightPower);
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+       // telemetry.addData("Status", "Run Time: " + runtime.toString());
+        //telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+        telemetry.addData("Encoder Position", position);
+        telemetry.addData("Box servo position", contPower);
+
     }
 
     /*
