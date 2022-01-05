@@ -7,10 +7,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name= "Pushbot: Auto Drive By Time", group= "Pushbot")
 public class PushbotAutoDriveByTime extends LinearOpMode {
 
-        Hardware robot = new Hardware();
+        HardwarePushbot robot = new HardwarePushbot();
         private ElapsedTime runtime = new ElapsedTime();
-
-        static final double SPEED = 0.6;
 
         @Override
         public void runOpMode(){
@@ -20,22 +18,41 @@ public class PushbotAutoDriveByTime extends LinearOpMode {
                 telemetry.update();
 
                 waitForStart();
-
-                robot.blDrive.setPower(SPEED);
-                robot.brDrive.setPower(SPEED);
-                robot.flDrive.setPower(SPEED);
-                robot.frDrive.setPower(SPEED);
+                robot.blDrive.setPower(HardwarePushbot.MAX_SPEED);
+                robot.brDrive.setPower(HardwarePushbot.MAX_SPEED);
+                robot.flDrive.setPower(HardwarePushbot.MAX_SPEED);
+                robot.frDrive.setPower(HardwarePushbot.MAX_SPEED);
                 runtime.reset();
 
-                while(opModeIsActive() && (runtime.seconds() <1.3)){
+                while(opModeIsActive() && (runtime.seconds() <0.5)){
+                        telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
+                        telemetry.update();
+                }
+                runtime.reset();
+
+                while (opModeIsActive() && (runtime.seconds() <0.5)){
                         telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
                         telemetry.update();
                 }
 
-                robot.blDrive.setPower(-SPEED);
-                robot.brDrive.setPower(-SPEED);
-                robot.flDrive.setPower(-SPEED);
-                robot.frDrive.setPower(-SPEED);
+
+/*
+                robot.blDrive.setPower(HardwarePushbot.MAX_SPEED);
+                robot.brDrive.setPower(HardwarePushbot.MAX_SPEED);
+                robot.flDrive.setPower(HardwarePushbot.MAX_SPEED);
+                robot.frDrive.setPower(HardwarePushbot.MAX_SPEED);
+                runtime.reset();
+
+                while(opModeIsActive() && (runtime.seconds() <0.5)){
+                        telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
+                        telemetry.update();
+                }
+
+
+                robot.blDrive.setPower(-HardwarePushbot.MAX_SPEED);
+                robot.brDrive.setPower(-HardwarePushbot.MAX_SPEED);
+                robot.flDrive.setPower(-HardwarePushbot.MAX_SPEED);
+                robot.frDrive.setPower(-HardwarePushbot.MAX_SPEED);
                 runtime.reset();
 
                 while (opModeIsActive() && (runtime.seconds() < 1.0)) {
@@ -50,7 +67,7 @@ public class PushbotAutoDriveByTime extends LinearOpMode {
                 telemetry.addData("Status", "Path Complete");
                 telemetry.update();
                 sleep(1000);
-
+*/
         }
 
 }
