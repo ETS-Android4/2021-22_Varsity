@@ -26,7 +26,7 @@ public class IterativeOpMode extends OpMode{
         double strafe_X = gamepad1.right_stick_x; //right is pos, left is neg. (-1 <= magnitude <= 1)
         double intakePwr = 0;
             if(gamepad1.right_bumper)
-            { intakePwr = 1; }
+            { intakePwr = 0.5; }
         double flipperPwr = 0;
             if (gamepad1.y)
             { flipperPwr = 0.5; }
@@ -39,26 +39,18 @@ public class IterativeOpMode extends OpMode{
             { carouselPwr = -gamepad1.left_trigger; }
         double cascadePwr = -gamepad2.left_stick_y; // forward is pos, backward is neg. (-1 <= magnitude <= 1)
         double rotatorPwr = gamepad2.right_stick_x; //right is pos, left is neg. (-1 <= magnitude <= 1)
+            if (gamepad2.b)
+            { robot.cap.setPosition(HardwarePushbot.CAP_OPEN); }
+            else if( gamepad2.x)
+            { robot.cap.setPosition(HardwarePushbot.CAP_CLOSED);}
+            if (gamepad2.dpad_up)
+            { robot.arm.setPosition(HardwarePushbot.ARM_OUT); }
+            else if( gamepad2.dpad_down)
+            { robot.arm.setPosition(HardwarePushbot.ARM_IN);}
         /*
         Does the CRServo rotator accept negative inputs for power,
         or do we need to change the servo's direction to get it to turn the opposite way?
          */
-        double capPosition = robot.cap.getPosition();
-            if (gamepad2.x)
-            {capPosition = HardwarePushbot.CAP_CLOSED;}
-            else if (gamepad2.a)
-            {capPosition = HardwarePushbot.CAP_OPEN;}
-        double armPosition = robot.arm.getPosition();
-            if (gamepad2.dpad_up)
-            { armPosition=HardwarePushbot.ARM_OUT;}
-            else if (gamepad2.dpad_down)
-            { armPosition=HardwarePushbot.ARM_IN;}
-        /*
-        Do the servos move completely to the previously assigned position before listening to new commands?
-        */
-
-        telemetry.addData("X", strafe_X );
-        telemetry.addData("Y", strafe_Y );
 
         double blStrafePwr = (strafe_X+strafe_Y);
         double brStrafePwr = -(strafe_X-strafe_Y);
@@ -89,7 +81,5 @@ public class IterativeOpMode extends OpMode{
         robot.rotator.setPower(rotatorPwr);
         robot.cascade.setPower(cascadePwr);
 
-        robot.arm.setPosition(armPosition);
-        robot.cap.setPosition(capPosition);
     }
 }

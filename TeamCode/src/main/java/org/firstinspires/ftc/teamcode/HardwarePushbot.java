@@ -72,10 +72,10 @@ public class HardwarePushbot
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
     public static final double MAX_SPEED= 1;
-    public static final double ARM_OUT= 0.5; //find actual value
-    public static final double ARM_IN = 0; //find actual value
+    public static final double ARM_OUT= 0;
+    public static final double ARM_IN = 1;
     public static final double CAP_CLOSED = 0; //find actual value
-    public static final double CAP_OPEN = 0; //find actual value
+    public static final double CAP_OPEN = 1; //find actual value
 
     /* Constructor */
     public HardwarePushbot(){
@@ -107,7 +107,7 @@ public class HardwarePushbot
         frDrive.setDirection(DcMotor.Direction.FORWARD);
         cascade.setDirection(DcMotor.Direction.FORWARD);
         intake.setDirection(DcMotor.Direction.FORWARD);
-        flipper.setDirection(DcMotor.Direction.FORWARD);
+        flipper.setDirection(DcMotor.Direction.REVERSE);
         carousel.setDirection(DcMotor.Direction.FORWARD);
         rotator.setDirection(CRServo.Direction.FORWARD);
 
@@ -122,7 +122,7 @@ public class HardwarePushbot
         carousel.setPower(0);
         rotator.setPower(0);
 
-        //set servos to correct positions
+        //Set servos to correct locations
         arm.setPosition(ARM_IN);
         cap.setPosition(CAP_OPEN);
 
