@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp (name="Basic: IterativeOpMode", group="Iterative OpMode")
 public class IterativeOpMode extends OpMode{
-    private ElapsedTime timer = new ElapsedTime();
+    private ElapsedTime flipperTimer = null;
     private HardwarePushbot robot = new HardwarePushbot();
 
     @Override public void init(){
@@ -17,21 +17,44 @@ public class IterativeOpMode extends OpMode{
         telemetry.addData("Status", "Initialized" );
     }
 
-    @Override public void start(){
-        timer.reset();
-    }
+    @Override public void start(){ }
 
     @Override public void loop(){
         double strafe_Y = -gamepad1.right_stick_y; // forward is pos, backward is neg. (-1 <= magnitude <= 1)
         double strafe_X = gamepad1.right_stick_x; //right is pos, left is neg. (-1 <= magnitude <= 1)
-        double intakePwr = 0;
+       robot.intake.setPower(0);
             if(gamepad1.right_bumper)
-            { intakePwr = 0.5; }
-        double flipperPwr = 0;
-            if (gamepad1.y)
-            { flipperPwr = 0.5; }
-            else if (gamepad1.a)
-            { flipperPwr = -0.5; }
+            { robot.intake.setPower(0.5);}
+
+            if (gamepad1.y) {
+                flipperTimer = new ElapsedTime();
+                robot.flipper.setPower(-0.5);
+            }
+            else if (gamepad1.a) {
+                flipperTimer = new ElapsedTime();
+                robot.flipper.setPower(0.3);
+            }
+            else if (flipperTimer!=null && robot.flipper.getPower()==-0.5 && flipperTimer.milliseconds()>=300)
+            {//going up
+                robot.flipper.setPower(-0.2);
+            }
+            else if (flipperTimer!=null && robot.flipper.getPower()==-0.2 && flipperTimer.milliseconds()>=500)
+            {//end of going up
+                robot.flipper.setPower(-0.1);
+                robot.intake.setPower(0.2);
+                flipperTimer.reset();
+            }
+            else if (flipperTimer!=null && robot.intake.getPower()>0 && flipperTimer.milliseconds()>=400)
+            {//intake spinning after going up
+                robot.intake.setPower(0);
+                robot.flipper.setPower(0);
+                flipperTimer=null;
+            }
+            else if (flipperTimer!=null &&  robot.flipper.getPower()>0 &&flipperTimer.milliseconds()>=300)
+            {//going down
+                robot.flipper.setPower(0);
+                flipperTimer=null;
+            }
         double carouselPwr = 0;
             if(gamepad1.right_trigger>0)
             { carouselPwr = gamepad1.right_trigger; }
@@ -75,8 +98,6 @@ public class IterativeOpMode extends OpMode{
             robot.frDrive.setPower(frStrafePwr);
         }
 
-        robot.intake.setPower(intakePwr);
-        robot.flipper.setPower(flipperPwr);
         robot.carousel.setPower(carouselPwr);
         robot.rotator.setPower(rotatorPwr);
         robot.cascade.setPower(cascadePwr);
