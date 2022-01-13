@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous (name= "Basic: EncoderAuton", group= "Linear OpMode")
+@Autonomous (name= "Basic: EncoderAutonRed", group= "Linear OpMode")
 @Disabled
 public class EncoderAuton extends LinearOpMode{
 
@@ -64,7 +64,7 @@ public class EncoderAuton extends LinearOpMode{
 
 
         robot.blDrive.setTargetPosition(robot.blDrive.getCurrentPosition() + (int) (22 / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION)));
-        robot.flDrive.setTargetPosition(robot.flDrive.getCurrentPosition() - (int) (22 / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION));
+        robot.flDrive.setTargetPosition(robot.flDrive.getCurrentPosition() - (int) (22 / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION)));
         robot.brDrive.setTargetPosition(robot.brDrive.getCurrentPosition() - (int) (22 / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION)));
         robot.frDrive.setTargetPosition(robot.frDrive.getCurrentPosition() + (int) (22 / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION)));
 

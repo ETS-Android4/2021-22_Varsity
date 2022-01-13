@@ -128,11 +128,11 @@ public class HardwarePushbot
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        blDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        brDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        flDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        cascade.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        cascade.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         carousel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         flipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
