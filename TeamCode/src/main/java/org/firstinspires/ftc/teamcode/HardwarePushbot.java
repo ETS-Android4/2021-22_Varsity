@@ -64,7 +64,7 @@ public class HardwarePushbot
     public DcMotor flipper = null;
     public DcMotor carousel = null;
 
-    public CRServo rotator = null;
+    //public CRServo rotator = null;
     public Servo arm = null;
     public Servo cap = null;
 
@@ -97,7 +97,7 @@ public class HardwarePushbot
         flipper = hwMap.get(DcMotor.class, "flipper");
         carousel = hwMap.get(DcMotor.class, "carousel");
 
-        rotator = hwMap.get(CRServo.class, "rotator");
+        //rotator = hwMap.get(CRServo.class, "rotator");
         arm = hwMap.get(Servo.class, "arm");
         cap = hwMap.get(Servo.class, "cap");
 
@@ -109,7 +109,7 @@ public class HardwarePushbot
         intake.setDirection(DcMotor.Direction.FORWARD);
         flipper.setDirection(DcMotor.Direction.REVERSE);
         carousel.setDirection(DcMotor.Direction.FORWARD);
-        rotator.setDirection(CRServo.Direction.FORWARD);
+        //rotator.setDirection(CRServo.Direction.FORWARD);
 
         // Set motors and CRServos to zero power
         blDrive.setPower(0);
@@ -120,7 +120,7 @@ public class HardwarePushbot
         intake.setPower(0);
         flipper.setPower(0);
         carousel.setPower(0);
-        rotator.setPower(0);
+        //rotator.setPower(0);
 
         //Set servos to correct locations
         arm.setPosition(ARM_IN);

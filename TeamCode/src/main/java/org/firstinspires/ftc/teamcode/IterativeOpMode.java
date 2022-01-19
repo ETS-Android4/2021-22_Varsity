@@ -99,7 +99,7 @@ public class IterativeOpMode extends OpMode{
         }
 
         robot.carousel.setPower(carouselPwr);
-        robot.rotator.setPower(rotatorPwr);
+        //robot.rotator.setPower(rotatorPwr);
         robot.cascade.setPower(cascadePwr);
 
     }
