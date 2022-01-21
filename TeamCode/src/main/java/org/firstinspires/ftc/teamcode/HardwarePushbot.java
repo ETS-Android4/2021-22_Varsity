@@ -29,8 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -55,16 +55,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class HardwarePushbot
 {
     /* Public OpMode members. */
-    public DcMotor blDrive = null;
-    public DcMotor brDrive = null;
-    public DcMotor flDrive = null;
-    public DcMotor frDrive = null;
-    public DcMotor cascade = null;
-    public DcMotor intake = null;
-    public DcMotor flipper = null;
-    public DcMotor carousel = null;
+    public DcMotorEx blDrive = null;
+    public DcMotorEx brDrive = null;
+    public DcMotorEx flDrive = null;
+    public DcMotorEx frDrive = null;
+    public DcMotorEx cascade = null;
+    public DcMotorEx intake = null;
+    public DcMotorEx flipper = null;
+    public DcMotorEx carousel = null;
 
-    //public CRServo rotator = null;
+    public CRServo rotator = null;
     public Servo arm = null;
     public Servo cap = null;
 
@@ -88,28 +88,28 @@ public class HardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        blDrive  = hwMap.get(DcMotor.class, "back_left");
-        brDrive  = hwMap.get(DcMotor.class, "back_right");
-        flDrive  = hwMap.get(DcMotor.class, "front_left");
-        frDrive  = hwMap.get(DcMotor.class, "front_right");
-        cascade = hwMap.get(DcMotor.class, "cascade");
-        intake = hwMap.get(DcMotor.class, "intake");
-        flipper = hwMap.get(DcMotor.class, "flipper");
-        carousel = hwMap.get(DcMotor.class, "carousel");
+        blDrive  = hwMap.get(DcMotorEx.class, "back_left");
+        brDrive  = hwMap.get(DcMotorEx.class, "back_right");
+        flDrive  = hwMap.get(DcMotorEx.class, "front_left");
+        frDrive  = hwMap.get(DcMotorEx.class, "front_right");
+        cascade = hwMap.get(DcMotorEx.class, "cascade");
+        intake = hwMap.get(DcMotorEx.class, "intake");
+        flipper = hwMap.get(DcMotorEx.class, "flipper");
+        carousel = hwMap.get(DcMotorEx.class, "carousel");
 
-        //rotator = hwMap.get(CRServo.class, "rotator");
+        rotator = hwMap.get(CRServo.class, "rotator");
         arm = hwMap.get(Servo.class, "arm");
         cap = hwMap.get(Servo.class, "cap");
 
-        blDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        brDrive.setDirection(DcMotor.Direction.FORWARD);
-        flDrive.setDirection(DcMotor.Direction.FORWARD);
-        frDrive.setDirection(DcMotor.Direction.FORWARD);
-        cascade.setDirection(DcMotor.Direction.FORWARD);
-        intake.setDirection(DcMotor.Direction.FORWARD);
-        flipper.setDirection(DcMotor.Direction.REVERSE);
-        carousel.setDirection(DcMotor.Direction.FORWARD);
-        //rotator.setDirection(CRServo.Direction.FORWARD);
+        blDrive.setDirection(DcMotorEx.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        brDrive.setDirection(DcMotorEx.Direction.FORWARD);
+        flDrive.setDirection(DcMotorEx.Direction.FORWARD);
+        frDrive.setDirection(DcMotorEx.Direction.FORWARD);
+        cascade.setDirection(DcMotorEx.Direction.FORWARD);
+        intake.setDirection(DcMotorEx.Direction.FORWARD);
+        flipper.setDirection(DcMotorEx.Direction.REVERSE);
+        carousel.setDirection(DcMotorEx.Direction.FORWARD);
+        rotator.setDirection(CRServo.Direction.FORWARD);
 
         // Set motors and CRServos to zero power
         blDrive.setPower(0);
@@ -120,7 +120,7 @@ public class HardwarePushbot
         intake.setPower(0);
         flipper.setPower(0);
         carousel.setPower(0);
-        //rotator.setPower(0);
+        rotator.setPower(0);
 
         //Set servos to correct locations
         arm.setPosition(ARM_IN);
@@ -128,14 +128,14 @@ public class HardwarePushbot
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        blDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        brDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        flDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        cascade.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        intake.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        carousel.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        flipper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        blDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        brDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        flDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        frDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        cascade.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        intake.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        carousel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        flipper.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
     }
  }
 

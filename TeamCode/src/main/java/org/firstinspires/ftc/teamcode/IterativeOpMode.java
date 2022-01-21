@@ -20,7 +20,7 @@ public class IterativeOpMode extends OpMode{
     @Override public void start(){ }
 
     @Override public void loop(){
-        double strafe_Y = -gamepad1.right_stick_y; // forward is pos, backward is neg. (-1 <= magnitude <= 1)
+        double strafe_Y = gamepad1.left_stick_y; // forward is pos, backward is neg. (-1 <= magnitude <= 1)
         double strafe_X = gamepad1.right_stick_x; //right is pos, left is neg. (-1 <= magnitude <= 1)
        robot.intake.setPower(0);
             if(gamepad1.right_bumper)
@@ -60,8 +60,16 @@ public class IterativeOpMode extends OpMode{
             { carouselPwr = gamepad1.right_trigger; }
             else if (gamepad1.left_trigger>0)
             { carouselPwr = -gamepad1.left_trigger; }
-        double cascadePwr = -gamepad2.left_stick_y; // forward is pos, backward is neg. (-1 <= magnitude <= 1)
-        double rotatorPwr = gamepad2.right_stick_x; //right is pos, left is neg. (-1 <= magnitude <= 1)
+        double cascadePwr = -gamepad2.right_stick_y; // forward is pos, backward is neg. (-1 <= magnitude <= 1)
+        double rotatorPwr=0;
+        if (gamepad2.right_bumper && !gamepad2.left_bumper)
+        {
+            rotatorPwr = -1;
+        }
+        else if(gamepad2.left_bumper && !gamepad2.right_bumper)//right is pos, left is neg. (-1 <= magnitude <= 1)
+        {
+            rotatorPwr=-1;
+        }
             if (gamepad2.b)
             { robot.cap.setPosition(HardwarePushbot.CAP_OPEN); }
             else if( gamepad2.x)
@@ -99,7 +107,7 @@ public class IterativeOpMode extends OpMode{
         }
 
         robot.carousel.setPower(carouselPwr);
-        //robot.rotator.setPower(rotatorPwr);
+        robot.rotator.setPower(rotatorPwr);
         robot.cascade.setPower(cascadePwr);
 
     }
