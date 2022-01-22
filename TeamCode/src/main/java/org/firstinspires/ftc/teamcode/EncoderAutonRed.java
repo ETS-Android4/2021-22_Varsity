@@ -48,27 +48,27 @@ public class EncoderAutonRed extends LinearOpMode{
         // Should be on the side of the alliance shipping hub closest to the carousel
 
 
-        robot.frDrive.setTargetPosition(robot.frDrive.getCurrentPosition()+TICKS_PER_ROTATION);
-        robot.frDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        robot.frDrive.setVelocity(200);
+        robot.blDrive.setTargetPosition(robot.blDrive.getCurrentPosition()+TICKS_PER_ROTATION);
+        robot.blDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        robot.blDrive.setVelocity(200);
         while (opModeIsActive())
         {
             if(gamepad1.x)
-            { robot.frDrive.setTargetPosition(robot.frDrive.getTargetPosition() + TICKS_PER_ROTATION); }
+            { robot.blDrive.setTargetPosition(robot.blDrive.getTargetPosition() + TICKS_PER_ROTATION); }
 
-        while (robot.frDrive.isBusy())
+        while (robot.blDrive.isBusy())
         {
             telemetry.addData("Status", "TargetPostion=%d. Position=%d. Speed=%f",
-                    robot.frDrive.getTargetPosition(), robot.frDrive.getCurrentPosition(), robot.frDrive.getVelocity());
+                    robot.blDrive.getTargetPosition(), robot.blDrive.getCurrentPosition(), robot.blDrive.getVelocity());
             telemetry.update();
         }
 
         telemetry.addData("Status", "Finished moving motor. Position=%d. TargetPosition=%d",
-                robot.frDrive.getCurrentPosition(), robot.frDrive.getTargetPosition());
+                robot.blDrive.getCurrentPosition(), robot.blDrive.getTargetPosition());
         telemetry.update();
 
-        robot.frDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        robot.frDrive.setPower(-0.2);
+        robot.blDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        robot.blDrive.setPower(-0.2);
             
         }
 

@@ -17,7 +17,7 @@ public class EncoderAutonBlue extends LinearOpMode{
     // gear reduction??
     private static final double ROBOT_DIAMETER = 17.15; //real val?
 
-    private static final double DRIVE_VELOCITY = 200;
+    private static final double DRIVE_VELOCITY = 1000;
     private static final double TURN_SPEED = 0.4;
     private static final double CASCADE_SPEED = 0.4; //find correct value
     private static final double CAROUSEL_SPEED = 0.4; //find correct value
@@ -41,8 +41,6 @@ public class EncoderAutonBlue extends LinearOpMode{
         // Should be on the side of the alliance shipping hub closest to the carousel
 
         encoderDrive(DRIVE_VELOCITY, -10); //make sure that this moves the robot's non-intake side forward
-        telemetry.addData("Status: step %d complete", 1);
-        telemetry.update();
         encoderRotate(TURN_SPEED, 45); //make sure this turns the robot clockwise
 //
 //        robot.cap.setPosition(HardwarePushbot.CAP_CLOSED);
@@ -71,10 +69,11 @@ public class EncoderAutonBlue extends LinearOpMode{
 
     private void encoderRotate(double speed, double angle) {
         if (opModeIsActive()) {
-            int newBLTarget = robot.blDrive.getCurrentPosition() + (int)((angle/360)*(ROBOT_DIAMETER*Math.PI));
-            int newFLTarget = robot.blDrive.getCurrentPosition() + (int)((angle/360)*(ROBOT_DIAMETER*Math.PI));
-            int newBRTarget = robot.blDrive.getCurrentPosition() - (int)((angle/360)*(ROBOT_DIAMETER*Math.PI));
-            int newFRTarget = robot.blDrive.getCurrentPosition() - (int)((angle/360)*(ROBOT_DIAMETER*Math.PI));
+            double arcLength = (angle/360)*(ROBOT_DIAMETER*Math.PI);
+            int newBLTarget = robot.blDrive.getCurrentPosition() + (int)((angle/360)*(arcLength/WHEEL_DIAMETER)*Math.PI*TICKS_PER_ROTATION);
+            int newFLTarget = robot.blDrive.getCurrentPosition() + (int)((angle/360)*(arcLength/WHEEL_DIAMETER)*Math.PI*TICKS_PER_ROTATION);
+            int newBRTarget = robot.blDrive.getCurrentPosition() - (int)((angle/360)*(arcLength/WHEEL_DIAMETER)*Math.PI*TICKS_PER_ROTATION);
+            int newFRTarget = robot.blDrive.getCurrentPosition() - (int)((angle/360)*(arcLength/WHEEL_DIAMETER)*Math.PI*TICKS_PER_ROTATION);
 
 
             robot.blDrive.setTargetPosition(newBLTarget);
@@ -192,12 +191,6 @@ public class EncoderAutonBlue extends LinearOpMode{
                         robot.frDrive.getTargetPosition(), robot.frDrive.getCurrentPosition(), robot.frDrive.getPower());
                 telemetry.update();
             }
-
-
-            robot.blDrive.setPower(0);
-            robot.brDrive.setPower(0);
-            robot.frDrive.setPower(0);
-            robot.flDrive.setPower(0);
         }
     }
 }
