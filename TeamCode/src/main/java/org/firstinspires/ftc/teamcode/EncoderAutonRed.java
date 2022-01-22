@@ -15,117 +15,61 @@ public class EncoderAutonRed extends LinearOpMode{
     private ElapsedTime timer = new ElapsedTime();
     private HardwarePushbot robot = new HardwarePushbot();
 
-    private static final int TICKS_PER_ROTATION = 538; //real val 537.7?
+    private static final double TICKS_PER_ROTATION = 538; //real val 537.7?
     private static final double WHEEL_DIAMETER = 3.7; //real val?
     // gear reduction??
     private static final double ROBOT_DIAMETER = 17.15; //real val?
 
-    private static final double DRIVE_SPEED = 0.6;
+    private static final double DRIVE_VELOCITY = 1000;
     private static final double TURN_SPEED = 0.4;
     private static final double CASCADE_SPEED = 0.4; //find correct value
     private static final double CAROUSEL_SPEED = 0.4; //find correct value
-
 
     @Override
     public void runOpMode()
     {
         robot.init(hardwareMap);
-
-        telemetry.addData("Status", "Resetting Encoders");
-        telemetry.update();
+        robot.blDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        robot.flDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        robot.frDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        robot.brDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         robot.blDrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         robot.flDrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         robot.frDrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         robot.brDrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.blDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        robot.flDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        robot.frDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        robot.brDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-
         waitForStart(); //set robot up with intake facing wall, in line with the middle dot.
         // Should be on the side of the alliance shipping hub closest to the carousel
 
-
-        robot.blDrive.setTargetPosition(robot.blDrive.getCurrentPosition()+TICKS_PER_ROTATION);
-        robot.blDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        robot.blDrive.setVelocity(200);
-        while (opModeIsActive())
-        {
-            if(gamepad1.x)
-            { robot.blDrive.setTargetPosition(robot.blDrive.getTargetPosition() + TICKS_PER_ROTATION); }
-
-        while (robot.blDrive.isBusy())
-        {
-            telemetry.addData("Status", "TargetPostion=%d. Position=%d. Speed=%f",
-                    robot.blDrive.getTargetPosition(), robot.blDrive.getCurrentPosition(), robot.blDrive.getVelocity());
-            telemetry.update();
-        }
-
-        telemetry.addData("Status", "Finished moving motor. Position=%d. TargetPosition=%d",
-                robot.blDrive.getCurrentPosition(), robot.blDrive.getTargetPosition());
-        telemetry.update();
-
-        robot.blDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        robot.blDrive.setPower(-0.2);
-            
-        }
-
-        /*
-
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED, 24); //make sure that this moves the robot's non-intake side forward
-
-        telemetry.addData("Status", "Done!");
-        telemetry.update();
-
-        robot.cap.setPosition(HardwarePushbot.CAP_CLOSED);
+        encoderDrive(DRIVE_VELOCITY, 5);
+        encoderRotate(TURN_SPEED, -55);
         robot.arm.setPosition(HardwarePushbot.ARM_OUT);
-        encoderCascadeExtend(CASCADE_SPEED, 1);
-        robot.cap.setPosition(HardwarePushbot.CAP_OPEN);
-        encoderCascadeRetract(CASCADE_SPEED, 1);
+        sleep(1000);
+        timer.reset();
+        robot.cascade.setPower(0.5);
+        while (timer.milliseconds()<1200)
+        { telemetry.addData("Status:", "extending cascade");
+            telemetry.update();}
+        robot.cascade.setPower(0);
+
+        robot.cap.setPosition(0.8);//CAP_CLOSED and CAP_OPEN reversed, I think. Must fix in HardwarePushbot.
+        sleep(1000);
+
+
+        robot.cascade.setPower(-0.7);
+        timer.reset();
+        while (timer.milliseconds()<1000)
+        { telemetry.addData("Status:", "retracting cascade");
+            telemetry.update();}
+        robot.cascade.setPower(0);
+
+
         robot.arm.setPosition(HardwarePushbot.ARM_IN);
+        sleep(1000);
 
-        encoderRotate(TURN_SPEED, 90); //should turn clockwise; robot intake should be facing wall with storage unit.
-        encoderDrive(DRIVE_SPEED, 35);// Carousel spinning wheel should line up with carousel
-        robot.carousel.setPower(CAROUSEL_SPEED);
-        timer.reset();
-        while (opModeIsActive() && timer.seconds()<1) //how long does it actually take to deliver a ducky?
-        {
-            telemetry.addData("Completing Action. Time taken:", timer.seconds());
-            telemetry.update();
-        }
-        robot.carousel.setPower(0);
-
-
-        robot.frDrive.setTargetPosition(robot.frDrive.getCurrentPosition() + (int) (22 / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION)));
-        robot.flDrive.setTargetPosition(robot.flDrive.getCurrentPosition() - (int) (22 / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION)));
-        robot.brDrive.setTargetPosition(robot.brDrive.getCurrentPosition() - (int) (22 / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION)));
-        robot.frDrive.setTargetPosition(robot.frDrive.getCurrentPosition() + (int) (22 / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION)));
-
-        robot.frDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        robot.brDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        robot.flDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        robot.frDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-
-        robot.frDrive.setPower(DRIVE_SPEED);
-        robot.brDrive.setPower(DRIVE_SPEED);
-        robot.frDrive.setPower(DRIVE_SPEED);
-        robot.flDrive.setPower(DRIVE_SPEED);
-
-        timer.reset();
-        while (opModeIsActive() && robot.frDrive.isBusy()
-                && robot.flDrive.isBusy() && robot.brDrive.isBusy() && robot.frDrive.isBusy()) // wait till all motors are done
-        {
-            telemetry.addData("Completing Action. Time taken:", timer.seconds());
-            telemetry.update();
-        }
-        robot.frDrive.setPower(0); //stop motors
-        robot.brDrive.setPower(0);
-        robot.frDrive.setPower(0);
-        robot.flDrive.setPower(0);
-         */
+        encoderRotate(TURN_SPEED, 165);
+        encoderDrive(2*DRIVE_VELOCITY, -100);
     }
 
     private void encoderStrafe(double speed, double xDistance, double yDistance)
@@ -135,10 +79,11 @@ public class EncoderAutonRed extends LinearOpMode{
 
     private void encoderRotate(double speed, double angle) {
         if (opModeIsActive()) {
-            int newBLTarget = robot.blDrive.getCurrentPosition() + (int)((angle/360)*(ROBOT_DIAMETER*Math.PI));
-            int newFLTarget = robot.frDrive.getCurrentPosition() + (int)((angle/360)*(ROBOT_DIAMETER*Math.PI));
-            int newBRTarget = robot.frDrive.getCurrentPosition() - (int)((angle/360)*(ROBOT_DIAMETER*Math.PI));
-            int newFRTarget = robot.frDrive.getCurrentPosition() - (int)((angle/360)*(ROBOT_DIAMETER*Math.PI));
+            double arcLength = (angle/360)*(ROBOT_DIAMETER*Math.PI);
+            int newBLTarget = robot.blDrive.getCurrentPosition() + (int)(TICKS_PER_ROTATION *arcLength/(WHEEL_DIAMETER*Math.PI));
+            int newFLTarget = robot.flDrive.getCurrentPosition() + (int)(TICKS_PER_ROTATION*arcLength/(WHEEL_DIAMETER*Math.PI));
+            int newBRTarget = robot.brDrive.getCurrentPosition() - (int)(TICKS_PER_ROTATION*arcLength/(WHEEL_DIAMETER*Math.PI));
+            int newFRTarget = robot.frDrive.getCurrentPosition() - (int)(TICKS_PER_ROTATION*arcLength/(WHEEL_DIAMETER*Math.PI));
 
 
             robot.blDrive.setTargetPosition(newBLTarget);
@@ -221,56 +166,41 @@ public class EncoderAutonRed extends LinearOpMode{
 
     private void encoderDrive(double speed, double distance)
     {
-        telemetry.addData("Status", "drive called");
-        telemetry.update();
-
         if (opModeIsActive()) {
-            int newBLTarget = robot.blDrive.getCurrentPosition() + (int) (distance / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION));
-            int newBRTarget = robot.brDrive.getCurrentPosition() + (int) (distance / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION));
-            int newFLTarget = robot.flDrive.getCurrentPosition() + (int) (distance / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION));
-            int newFRTarget = robot.frDrive.getCurrentPosition() + (int) (distance / (WHEEL_DIAMETER * Math.PI * TICKS_PER_ROTATION));
-
-            telemetry.addData("Status", "new targets received");
-            telemetry.update();
+            int newBLTarget = robot.blDrive.getCurrentPosition() + (int) (TICKS_PER_ROTATION*distance / (WHEEL_DIAMETER * Math.PI));
+            int newBRTarget = robot.brDrive.getCurrentPosition() + (int) (TICKS_PER_ROTATION* distance / (WHEEL_DIAMETER * Math.PI));
+            int newFLTarget = robot.flDrive.getCurrentPosition() + (int) (TICKS_PER_ROTATION* distance / (WHEEL_DIAMETER * Math.PI));
+            int newFRTarget = robot.frDrive.getCurrentPosition() + (int) (TICKS_PER_ROTATION*distance / (WHEEL_DIAMETER * Math.PI));
 
             robot.blDrive.setTargetPosition(newBLTarget);
             robot.flDrive.setTargetPosition(newFLTarget);
             robot.brDrive.setTargetPosition(newBRTarget);
             robot.frDrive.setTargetPosition(newFRTarget);
 
-            telemetry.addData("Status", "new targets set");
-            telemetry.update();
-
             robot.blDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             robot.brDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             robot.flDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             robot.frDrive.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
 
-            telemetry.addData("Status", "runmode set");
-            telemetry.update();
-
-            robot.blDrive.setPower(speed);
-            robot.brDrive.setPower(speed);
-            robot.frDrive.setPower(speed);
-            robot.flDrive.setPower(speed);
-
-            telemetry.addData("Status", "motors on");
-            telemetry.update();
+            robot.blDrive.setVelocity(speed);
+            robot.brDrive.setVelocity(speed);
+            robot.frDrive.setVelocity(speed);
+            robot.flDrive.setVelocity(speed);
 
             timer.reset();
 
-            while (opModeIsActive() && robot.blDrive.isBusy()
-                    && robot.flDrive.isBusy() && robot.brDrive.isBusy() && robot.frDrive.isBusy())
+            while (robot.blDrive.isBusy() && robot.brDrive.isBusy() && robot.flDrive.isBusy() && robot.frDrive.isBusy())
             {
-                telemetry.addData("Completing Action. Time taken:", timer.seconds());
+                telemetry.addData("BL Motor Status:\n", "Target Position=%d\nCurrent Position=%d\nSpeed=%f",
+                        robot.blDrive.getTargetPosition(), robot.blDrive.getCurrentPosition(), robot.blDrive.getPower());
+                telemetry.addData("BR Motor Status:\n", "Target Position=%d\nCurrent Position=%d\nSpeed=%f",
+                        robot.brDrive.getTargetPosition(), robot.brDrive.getCurrentPosition(), robot.brDrive.getPower());
+                telemetry.addData("FL Motor Status:\n", "Target Position=%d\nCurrent Position=%d\nSpeed=%f",
+                        robot.flDrive.getTargetPosition(), robot.flDrive.getCurrentPosition(), robot.flDrive.getPower());
+                telemetry.addData("FR Motor Status:\n", "Target Position=%d\nCurrent Position=%d\nSpeed=%f",
+                        robot.frDrive.getTargetPosition(), robot.frDrive.getCurrentPosition(), robot.frDrive.getPower());
                 telemetry.update();
             }
-
-
-            robot.blDrive.setPower(0);
-            robot.brDrive.setPower(0);
-            robot.frDrive.setPower(0);
-            robot.flDrive.setPower(0);
         }
     }
 }

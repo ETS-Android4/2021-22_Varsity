@@ -28,19 +28,15 @@ public class IterativeOpMode extends OpMode{
 
             if (gamepad1.y) {
                 flipperTimer = new ElapsedTime();
-                robot.flipper.setPower(-0.5);
+                robot.flipper.setPower(1);
             }
             else if (gamepad1.a) {
                 flipperTimer = new ElapsedTime();
-                robot.flipper.setPower(0.3);
+                robot.flipper.setPower(-0.6);
             }
-            else if (flipperTimer!=null && robot.flipper.getPower()==-0.5 && flipperTimer.milliseconds()>=300)
-            {//if going up
-                robot.flipper.setPower(-0.2);//make it go up slower
-            }
-            else if (flipperTimer!=null && robot.flipper.getPower()==-0.2 && flipperTimer.milliseconds()>=500)
+            else if (flipperTimer!=null && robot.flipper.getPower()==1 && flipperTimer.milliseconds()>=150)
             {//if going up slowly
-                robot.flipper.setPower(-0.1);//hold the flipper stiff
+                robot.flipper.setPower(0.5);//hold the flipper stiff
                 robot.intake.setPower(0.2);//turn on the intake
                 flipperTimer.reset();//and restart the timer
             }
@@ -50,11 +46,13 @@ public class IterativeOpMode extends OpMode{
                 robot.flipper.setPower(0);//turn off flipper
                 flipperTimer=null;
             }
-            else if (flipperTimer!=null &&  robot.flipper.getPower()>0 &&flipperTimer.milliseconds()>=300)
+            else if (flipperTimer!=null &&  robot.flipper.getPower()<0 &&flipperTimer.milliseconds()>=300)
             {//if going down
                 robot.flipper.setPower(0);//turn off flipper
                 flipperTimer=null;
             }
+
+
         double carouselPwr = 0;
             if(gamepad1.right_trigger>0)
             { carouselPwr = gamepad1.right_trigger; }
@@ -64,11 +62,11 @@ public class IterativeOpMode extends OpMode{
         double rotatorPwr=0;
         if (gamepad2.right_bumper && !gamepad2.left_bumper)
         {
-            rotatorPwr = -1;
+            rotatorPwr = -0.5;
         }
         else if(gamepad2.left_bumper && !gamepad2.right_bumper)//right is pos, left is neg. (-1 <= magnitude <= 1)
         {
-            rotatorPwr=1;
+            rotatorPwr=0.5;
         }
             if (gamepad2.b)
             { robot.cap.setPosition(HardwarePushbot.CAP_OPEN); }

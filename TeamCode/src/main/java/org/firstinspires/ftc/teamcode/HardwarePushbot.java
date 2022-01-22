@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -132,7 +133,7 @@ public class HardwarePushbot
         brDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         flDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         frDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        cascade.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        cascade.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         intake.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         carousel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
         flipper.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);

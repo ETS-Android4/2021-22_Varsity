@@ -6,13 +6,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import java.sql.Time;
+
 @Autonomous (name= "Basic: AutonBlue", group= "LinearOpMode")
 public class EncoderAutonBlue extends LinearOpMode{
 
     private ElapsedTime timer = new ElapsedTime();
     private HardwarePushbot robot = new HardwarePushbot();
 
-    private static final double TICKS_PER_ROTATION = 538; //real val 537.7?
+    private static final double TICKS_PER_ROTATION = 538; //real val 537.7
     private static final double WHEEL_DIAMETER = 3.7; //real val?
     // gear reduction??
     private static final double ROBOT_DIAMETER = 17.15; //real val?
@@ -40,26 +42,37 @@ public class EncoderAutonBlue extends LinearOpMode{
         waitForStart(); //set robot up with intake facing wall, in line with the middle dot.
         // Should be on the side of the alliance shipping hub closest to the carousel
 
-        encoderDrive(DRIVE_VELOCITY, -10); //make sure that this moves the robot's non-intake side forward
-        encoderRotate(TURN_SPEED, 45); //make sure this turns the robot clockwise
-//
-//        robot.cap.setPosition(HardwarePushbot.CAP_CLOSED);
-//        robot.arm.setPosition(HardwarePushbot.ARM_OUT);
-//        encoderCascadeExtend(CASCADE_SPEED, 1);
-//        robot.cap.setPosition(HardwarePushbot.CAP_OPEN);
-//        encoderCascadeRetract(CASCADE_SPEED, 1);
-//        robot.arm.setPosition(HardwarePushbot.ARM_IN);
-//
-//        encoderRotate(TURN_SPEED, 45); //should turn clockwise; robot intake should be facing wall with storage unit.
-//        encoderDrive(DRIVE_VELOCITY, 35);// Carousel spinning wheel should line up with carousel
-//        robot.carousel.setPower(CAROUSEL_SPEED);
-//        timer.reset();
-//        while (opModeIsActive() && timer.seconds()<1) //how long does it actually take to deliver a ducky?
-//        {
-//            telemetry.addData("Completing Action. Time taken:", timer.seconds());
-//            telemetry.update();
-//        }
-//        robot.carousel.setPower(0);
+        encoderDrive(DRIVE_VELOCITY, 5);
+        encoderRotate(TURN_SPEED, 55);
+        robot.arm.setPosition(HardwarePushbot.ARM_OUT);
+        sleep(1000);
+        timer.reset();
+        robot.cascade.setPower(0.5);
+        while (timer.milliseconds()<1200)
+        { telemetry.addData("Status:", "extending cascade");
+        telemetry.update();}
+        robot.cascade.setPower(0);
+
+        robot.cap.setPosition(0.8);//CAP_CLOSED and CAP_OPEN reversed, I think. Must fix in HardwarePushbot.
+        sleep(1000);
+
+
+        robot.cascade.setPower(-0.7);
+        timer.reset();
+        while (timer.milliseconds()<1000)
+        { telemetry.addData("Status:", "retracting cascade");
+            telemetry.update();}
+        robot.cascade.setPower(0);
+
+
+        robot.arm.setPosition(HardwarePushbot.ARM_IN);
+        sleep(1000);
+
+
+        encoderRotate(TURN_SPEED, -165); //should turn clockwise; robot intake should be facing wall with storage unit.
+
+
+        encoderDrive(2*DRIVE_VELOCITY, -100);
     }
 
     private void encoderStrafe(double speed, double xDistance, double yDistance)
@@ -70,10 +83,10 @@ public class EncoderAutonBlue extends LinearOpMode{
     private void encoderRotate(double speed, double angle) {
         if (opModeIsActive()) {
             double arcLength = (angle/360)*(ROBOT_DIAMETER*Math.PI);
-            int newBLTarget = robot.blDrive.getCurrentPosition() + (int)((angle/360)*(arcLength/WHEEL_DIAMETER)*Math.PI*TICKS_PER_ROTATION);
-            int newFLTarget = robot.blDrive.getCurrentPosition() + (int)((angle/360)*(arcLength/WHEEL_DIAMETER)*Math.PI*TICKS_PER_ROTATION);
-            int newBRTarget = robot.blDrive.getCurrentPosition() - (int)((angle/360)*(arcLength/WHEEL_DIAMETER)*Math.PI*TICKS_PER_ROTATION);
-            int newFRTarget = robot.blDrive.getCurrentPosition() - (int)((angle/360)*(arcLength/WHEEL_DIAMETER)*Math.PI*TICKS_PER_ROTATION);
+            int newBLTarget = robot.blDrive.getCurrentPosition() + (int)(TICKS_PER_ROTATION *arcLength/(WHEEL_DIAMETER*Math.PI));
+            int newFLTarget = robot.flDrive.getCurrentPosition() + (int)(TICKS_PER_ROTATION*arcLength/(WHEEL_DIAMETER*Math.PI));
+            int newBRTarget = robot.brDrive.getCurrentPosition() - (int)(TICKS_PER_ROTATION*arcLength/(WHEEL_DIAMETER*Math.PI));
+            int newFRTarget = robot.frDrive.getCurrentPosition() - (int)(TICKS_PER_ROTATION*arcLength/(WHEEL_DIAMETER*Math.PI));
 
 
             robot.blDrive.setTargetPosition(newBLTarget);
@@ -157,10 +170,10 @@ public class EncoderAutonBlue extends LinearOpMode{
     private void encoderDrive(double speed, double distance)
     {
         if (opModeIsActive()) {
-            int newBLTarget = robot.blDrive.getCurrentPosition() + (int) ((distance / WHEEL_DIAMETER) * Math.PI * TICKS_PER_ROTATION);
-            int newBRTarget = robot.brDrive.getCurrentPosition() + (int) ((distance / WHEEL_DIAMETER) * Math.PI * TICKS_PER_ROTATION);
-            int newFLTarget = robot.flDrive.getCurrentPosition() + (int) ((distance / WHEEL_DIAMETER) * Math.PI * TICKS_PER_ROTATION);
-            int newFRTarget = robot.frDrive.getCurrentPosition() + (int) ((distance / WHEEL_DIAMETER) * Math.PI * TICKS_PER_ROTATION);
+            int newBLTarget = robot.blDrive.getCurrentPosition() + (int) (TICKS_PER_ROTATION*distance / (WHEEL_DIAMETER * Math.PI));
+            int newBRTarget = robot.brDrive.getCurrentPosition() + (int) (TICKS_PER_ROTATION* distance / (WHEEL_DIAMETER * Math.PI));
+            int newFLTarget = robot.flDrive.getCurrentPosition() + (int) (TICKS_PER_ROTATION* distance / (WHEEL_DIAMETER * Math.PI));
+            int newFRTarget = robot.frDrive.getCurrentPosition() + (int) (TICKS_PER_ROTATION*distance / (WHEEL_DIAMETER * Math.PI));
 
             robot.blDrive.setTargetPosition(newBLTarget);
             robot.flDrive.setTargetPosition(newFLTarget);
