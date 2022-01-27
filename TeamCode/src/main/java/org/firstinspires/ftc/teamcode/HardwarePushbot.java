@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -69,9 +70,11 @@ public class HardwarePushbot
     public Servo arm = null;
     public Servo cap = null;
 
+    public DistanceSensor dSensor = null;
+
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    //private ElapsedTime period  = new ElapsedTime();
     public static final double MAX_SPEED= 1;
     public static final double ARM_OUT= 0;
     public static final double ARM_IN = 1;
@@ -101,6 +104,8 @@ public class HardwarePushbot
         rotator = hwMap.get(CRServo.class, "rotator");
         arm = hwMap.get(Servo.class, "arm");
         cap = hwMap.get(Servo.class, "cap");
+
+        dSensor = hwMap.get(DistanceSensor.class, "distanceSensor");
 
         blDrive.setDirection(DcMotorEx.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         brDrive.setDirection(DcMotorEx.Direction.FORWARD);
@@ -134,9 +139,9 @@ public class HardwarePushbot
         flDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         frDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         cascade.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        intake.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        intake.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         carousel.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        flipper.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        flipper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
     }
  }
 
