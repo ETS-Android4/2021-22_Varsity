@@ -14,11 +14,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class IterativeOpMode extends OpMode{
     private ElapsedTime timer = new ElapsedTime();
     private int flipperHighPosition = 80;
-    private int flipperMidPosition = 175;
     private int flipperLowPosition = 300;
     private HardwarePushbot robot = new HardwarePushbot();
     private boolean intakeGoingDown = false;
     private boolean intakeGoingUp = false;
+    private boolean intakeSpin = false;
 
     @Override public void init(){
         robot.init(hardwareMap);
@@ -118,13 +118,26 @@ public class IterativeOpMode extends OpMode{
             {
                 robot.flipper.setPower(-0.3);
             }
-            else if (robot.flipper.getCurrentPosition()<flipperHighPosition-10)
+            else if (robot.flipper.getCurrentPosition()<70)
             {
-                robot.flipper.setPower(0.005);
+                robot.flipper.setPower(0.008);
+                intakeSpin=true;
             }
-            else if (robot.flipper.getCurrentPosition()<160)
+            else if (robot.flipper.getCurrentPosition()<130)
             {
                 robot.flipper.setPower(0);
+            }
+        }
+        if(intakeSpin)
+        {
+            if(Math.abs(robot.flipper.getCurrentPosition()-40)<10)
+            {
+                robot.intake.setPower(-0.5);
+            }
+            else
+            {
+                robot.intake.setPower(0);
+                intakeSpin=false;
             }
         }
 
