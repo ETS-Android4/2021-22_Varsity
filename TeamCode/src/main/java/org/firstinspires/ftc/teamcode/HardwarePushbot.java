@@ -74,8 +74,8 @@ public class HardwarePushbot
     public static final double MAX_SPEED= 1;
     public static final double ARM_OUT= 0;
     public static final double ARM_IN = 1;
-    public static final double CAP_CLOSED = 0; //find actual value
-    public static final double CAP_OPEN = 1; //find actual value
+    public static final double CAP_CLOSED = 1; //find actual value
+    public static final double CAP_OPEN = 0; //find actual value
 
     /* Constructor */
     public HardwarePushbot(){
