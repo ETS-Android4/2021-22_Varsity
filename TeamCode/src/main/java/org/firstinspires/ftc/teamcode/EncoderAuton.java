@@ -14,9 +14,9 @@ import org.firstinspires.ftc.robotcore.internal.camera.delegating.DelegatingCapt
 public class EncoderAuton extends LinearOpMode{
 
     protected static final double TICKS_PER_ROTATION = 538; //real val 537.7?
-    protected static final double WHEEL_DIAMETER = 3.7; //real val?
+    protected static final double WHEEL_DIAMETER = 4; //real val?
     // gear reduction??
-    protected static final double ROBOT_DIAMETER = 17.15; //real val?
+    protected static final double ROBOT_DIAMETER = 16.64; //real val?
 
     protected static final double DRIVE_VELOCITY = 1000;
     protected static final double TURN_SPEED = 0.4;

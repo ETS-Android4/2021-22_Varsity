@@ -24,6 +24,9 @@ public class IterativeOpMode extends OpMode {
 
     @Override
     public void loop() {
+
+        telemetry.addData("Status", "flipperPos=%d", robot.flipper.getCurrentPosition());
+        telemetry.update();
         double strafe_Y = gamepad1.left_stick_y; // forward is pos, backward is neg. (-1 <= magnitude <= 1)
         double strafe_X = gamepad1.right_stick_x; //right is pos, left is neg. (-1 <= magnitude <= 1)
         robot.intake.setPower(0);
@@ -59,14 +62,15 @@ public class IterativeOpMode extends OpMode {
         }
         double rotatorPwr = 0;
         if (gamepad2.right_bumper && !gamepad2.left_bumper) {
-            rotatorPwr = 1;
+            robot.rotator.setPosition(HardwarePushbot.ROTATOR_RIGHT);
         } else if (gamepad2.left_bumper && !gamepad2.right_bumper)//right is pos, left is neg. (-1 <= magnitude <= 1)
         {
-            rotatorPwr = -1;
+            robot.rotator.setPosition(HardwarePushbot.ROTATOR_LEFT);
         }
         if (gamepad2.b) {
             robot.cap.setPosition(HardwarePushbot.CAP_OPEN);
-        } else if (gamepad2.x) {
+        }
+        else if (gamepad2.x) {
             robot.cap.setPosition(HardwarePushbot.CAP_CLOSED);
         }
         if (gamepad2.dpad_up) {
@@ -102,7 +106,6 @@ public class IterativeOpMode extends OpMode {
         }
 
         robot.carousel.setPower(carouselPwr);
-        robot.rotator.setPower(rotatorPwr);
         robot.cascade.setPower(cascadePwr);
 
     }

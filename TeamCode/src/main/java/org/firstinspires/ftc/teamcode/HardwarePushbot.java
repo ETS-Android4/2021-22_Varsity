@@ -64,7 +64,7 @@ public class HardwarePushbot
     public DcMotorEx flipper = null;
     public DcMotorEx carousel = null;
 
-    public CRServo rotator = null;
+    public Servo rotator = null;
     public Servo arm = null;
     public Servo cap = null;
 
@@ -76,6 +76,8 @@ public class HardwarePushbot
     public static final double ARM_IN = 1;
     public static final double CAP_CLOSED = 1; //find actual value
     public static final double CAP_OPEN = 0; //find actual value
+    public static final double ROTATOR_RIGHT = 0; //find actual value
+    public static final double ROTATOR_LEFT = 0.5; //find actual value
 
     /* Constructor */
     public HardwarePushbot(){
@@ -97,7 +99,7 @@ public class HardwarePushbot
         flipper = hwMap.get(DcMotorEx.class, "flipper");
         carousel = hwMap.get(DcMotorEx.class, "carousel");
 
-        rotator = hwMap.get(CRServo.class, "rotator");
+        rotator = hwMap.get(Servo.class, "rotator");
         arm = hwMap.get(Servo.class, "arm");
         cap = hwMap.get(Servo.class, "cap");
 
@@ -109,7 +111,7 @@ public class HardwarePushbot
         intake.setDirection(DcMotorEx.Direction.FORWARD);
         flipper.setDirection(DcMotorEx.Direction.REVERSE);
         carousel.setDirection(DcMotorEx.Direction.FORWARD);
-        rotator.setDirection(CRServo.Direction.FORWARD);
+        rotator.setDirection(Servo.Direction.FORWARD);
 
         // Set motors and CRServos to zero power
         blDrive.setPower(0);
@@ -120,11 +122,12 @@ public class HardwarePushbot
         intake.setPower(0);
         flipper.setPower(0);
         carousel.setPower(0);
-        rotator.setPower(0);
 
         //Set servos to correct locations
         arm.setPosition(ARM_IN);
         cap.setPosition(CAP_OPEN);
+        rotator.setPosition(ROTATOR_RIGHT);
+        //set rotator pos
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.

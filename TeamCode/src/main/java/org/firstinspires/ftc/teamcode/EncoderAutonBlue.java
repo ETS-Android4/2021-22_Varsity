@@ -23,31 +23,31 @@ public class EncoderAutonBlue extends EncoderAuton{
         robot.flDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         robot.frDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         robot.brDrive.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        robot.flipper.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
         robot.blDrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         robot.flDrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         robot.frDrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         robot.brDrive.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        robot.flipper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.flipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.flipper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         waitForStart(); //set robot up with intake facing wall, in line with the middle dot.
         // Should be on the side of the alliance shipping hub closest to the carousel
 
-        robot.flipper.setTargetPosition(robot.flipper.getCurrentPosition()+100);
-        robot.flipper.setVelocity(100);
-        while (robot.flipper.isBusy()) {
+        flipperUp();
 
-            telemetry.addData("status:", "flipperTarget=%d, flipperCurrent=%d",
-                    robot.flipper.getTargetPosition(), robot.flipper.getCurrentPosition());
-            telemetry.update();
-        }
-        robot.flipper.setVelocity(0);
-        sleep(3000);
-        //robot.cap.setPosition(HardwarePushbot.CAP_CLOSED);
+        encoderDrive(timer, robot, DRIVE_VELOCITY, -5);
+        //encoderRotate(timer, robot, TURN_SPEED, 270);
+        robot.cap.setPosition(HardwarePushbot.CAP_CLOSED);
         sleep(1000);
-telemetry.addData("Status:", "cap closed");
-telemetry.update();
+        robot.arm.setPosition(HardwarePushbot.ARM_OUT);
+        sleep(1000);
+        //encoderCascadeExtend(timer, robot, CASCADE_SPEED, 0.8);
+        //robot.cap.setPosition(0.8);
+        //encoderCascadeExtend(timer, robot, CASCADE_SPEED, -0.8);
+
+        sleep(3000);
         /*
         encoderDrive(timer, robot, DRIVE_VELOCITY, -5); //come off of wall backwards w/ kickstand on wall
         encoderRotate(timer, robot, TURN_SPEED, 220); //rotate 180 degrees and continue as usual
@@ -75,5 +75,38 @@ telemetry.update();
 
         robot.arm.setPosition(HardwarePushbot.ARM_IN);
         sleep(1000);*/
+    }
+
+    private void flipperUp()
+    {
+        robot.flipper.setTargetPosition(80);
+        robot.flipper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.flipper.setVelocity(100);
+        while (robot.flipper.isBusy()) {
+
+            if (robot.flipper.getCurrentPosition()>20)
+            {
+                robot.flipper.setVelocity(5);
+            }
+            telemetry.addData("status1:", "flipperTarget=%d, flipperCurrent=%d",
+                    robot.flipper.getTargetPosition(), robot.flipper.getCurrentPosition());
+            telemetry.update();
+        }
+        sleep(200);
+
+        robot.flipper.setTargetPosition(90);
+        robot.flipper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.flipper.setVelocity(50);
+        while (robot.flipper.isBusy()) {
+
+            telemetry.addData("status2:", "flipperTarget=%d, flipperCurrent=%d",
+                    robot.flipper.getTargetPosition(), robot.flipper.getCurrentPosition());
+            telemetry.update();
+        }
+
+        robot.flipper.setVelocity(0);
+        //robot.cap.setPosition(HardwarePushbot.CAP_CLOSED);
+        telemetry.addData("Status3:", "flipperCurrent=%d", robot.flipper.getCurrentPosition());
+        telemetry.update();
     }
 }
